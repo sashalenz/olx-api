@@ -14,7 +14,7 @@ it('lists categories', function (): void {
     expect($categories->data[0]->name)->toBe('Запчастини')
         ->and($categories->data[0]->photosLimit)->toBe(8);
 
-    Http::assertSent(fn (Request $request): bool => str_starts_with($request->url(), 'https://www.olx.test/api/open/categories?'));
+    Http::assertSent(fn (Request $request): bool => str_starts_with($request->url(), 'https://www.olx.test/api/partner/categories?'));
 });
 
 it('gets a single category', function (): void {
@@ -34,7 +34,7 @@ it('lists category attributes', function (): void {
         ->and($attrs->data[0]->validation['required'])->toBeTrue()
         ->and($attrs->data[0]->values[0]['code'])->toBe('jeep');
 
-    Http::assertSent(fn (Request $request): bool => $request->url() === 'https://www.olx.test/api/open/categories/1234/attributes');
+    Http::assertSent(fn (Request $request): bool => $request->url() === 'https://www.olx.test/api/partner/categories/1234/attributes');
 });
 
 it('suggests a category by query', function (): void {
@@ -42,6 +42,6 @@ it('suggests a category by query', function (): void {
 
     OlxApi::categories()->suggestion('фара jeep');
 
-    Http::assertSent(fn (Request $request): bool => str_starts_with($request->url(), 'https://www.olx.test/api/open/categories/suggestion?')
+    Http::assertSent(fn (Request $request): bool => str_starts_with($request->url(), 'https://www.olx.test/api/partner/categories/suggestion?')
         && $request['q'] === 'фара jeep');
 });

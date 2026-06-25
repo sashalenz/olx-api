@@ -12,7 +12,7 @@ use Throwable;
 
 /**
  * Transport layer for the OLX Partner API v2. Speaks JSON over
- * `{base_url}/api/open/…` with `Authorization: Bearer` + `Version: 2.0`
+ * `{base_url}/api/partner/…` with `Authorization: Bearer` + `Version: 2.0`
  * (the OAuth token endpoint is the one exception: form-encoded, no bearer).
  *
  * Connection failures are retried; HTTP error statuses are NOT retried here —

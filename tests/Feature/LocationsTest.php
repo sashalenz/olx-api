@@ -46,7 +46,7 @@ it('reverse-geocodes coordinates to a location', function (): void {
     expect($location->city?->name)->toBe('Київ')
         ->and($location->district?->id)->toBe(50);
 
-    Http::assertSent(fn (Request $request): bool => str_starts_with($request->url(), 'https://www.olx.test/api/open/locations?')
+    Http::assertSent(fn (Request $request): bool => str_starts_with($request->url(), 'https://www.olx.test/api/partner/locations?')
         && (string) $request['latitude'] === '50.45');
 });
 

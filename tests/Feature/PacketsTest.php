@@ -20,7 +20,7 @@ it('lists zones for a category', function (): void {
 
     OlxApi::packets()->zones(['category_id' => 1234]);
 
-    Http::assertSent(fn (Request $request): bool => str_starts_with($request->url(), 'https://www.olx.test/api/open/zones?')
+    Http::assertSent(fn (Request $request): bool => str_starts_with($request->url(), 'https://www.olx.test/api/partner/zones?')
         && $request['category_id'] === 1234);
 });
 
@@ -34,7 +34,7 @@ it('lists user packets and buys one', function (): void {
     OlxApi::packets()->buyForUser(['category_id' => 1234, 'size' => 200, 'payment_method' => 'account']);
 
     Http::assertSent(fn (Request $request): bool => $request->method() === 'POST'
-        && $request->url() === 'https://www.olx.test/api/open/users/me/packets'
+        && $request->url() === 'https://www.olx.test/api/partner/users/me/packets'
         && $request['size'] === 200);
 });
 

@@ -24,7 +24,7 @@ it('lists adverts and hydrates DTOs from the data envelope', function (): void {
         ->and($result->data[0]->statusEnum())->toBe(AdvertStatus::Active);
 
     Http::assertSent(fn (Request $request): bool => $request->method() === 'GET'
-        && str_starts_with($request->url(), 'https://www.olx.test/api/open/adverts?')
+        && str_starts_with($request->url(), 'https://www.olx.test/api/partner/adverts?')
         && $request->hasHeader('Authorization', 'Bearer test-token')
         && $request->hasHeader('Version', '2.0')
         && $request->hasHeader('Accept-Language', 'uk'));
@@ -38,7 +38,7 @@ it('gets a single advert', function (): void {
     expect($advert->id)->toBe(7)
         ->and($advert->images[0]->url)->toBe('https://i/1.jpg');
 
-    Http::assertSent(fn (Request $request): bool => $request->url() === 'https://www.olx.test/api/open/adverts/7');
+    Http::assertSent(fn (Request $request): bool => $request->url() === 'https://www.olx.test/api/partner/adverts/7');
 });
 
 it('creates an advert', function (): void {
@@ -50,7 +50,7 @@ it('creates an advert', function (): void {
         ->and($advert->statusEnum())->toBe(AdvertStatus::New);
 
     Http::assertSent(fn (Request $request): bool => $request->method() === 'POST'
-        && $request->url() === 'https://www.olx.test/api/open/adverts'
+        && $request->url() === 'https://www.olx.test/api/partner/adverts'
         && $request['title'] === 'Двигун 2.0'
         && $request['category_id'] === 1234);
 });
@@ -61,7 +61,7 @@ it('updates an advert', function (): void {
     OlxApi::adverts()->update(5, ['price' => ['value' => 1000, 'currency' => 'UAH']]);
 
     Http::assertSent(fn (Request $request): bool => $request->method() === 'PUT'
-        && $request->url() === 'https://www.olx.test/api/open/adverts/5');
+        && $request->url() === 'https://www.olx.test/api/partner/adverts/5');
 });
 
 it('deletes an advert', function (): void {
@@ -70,7 +70,7 @@ it('deletes an advert', function (): void {
     expect(OlxApi::adverts()->delete(5))->toBeTrue();
 
     Http::assertSent(fn (Request $request): bool => $request->method() === 'DELETE'
-        && $request->url() === 'https://www.olx.test/api/open/adverts/5');
+        && $request->url() === 'https://www.olx.test/api/partner/adverts/5');
 });
 
 it('runs lifecycle commands', function (): void {
@@ -81,7 +81,7 @@ it('runs lifecycle commands', function (): void {
     OlxApi::adverts()->finish(5);
     OlxApi::adverts()->extend(5);
 
-    Http::assertSent(fn (Request $request): bool => $request->url() === 'https://www.olx.test/api/open/adverts/5/commands'
+    Http::assertSent(fn (Request $request): bool => $request->url() === 'https://www.olx.test/api/partner/adverts/5/commands'
         && $request['command'] === 'activate');
     Http::assertSent(fn (Request $request): bool => $request['command'] === 'deactivate'
         && $request['is_success'] === true);
@@ -111,7 +111,7 @@ it('lists and buys paid features for an advert', function (): void {
     OlxApi::adverts()->buyPaidFeature(5, ['type' => 'top', 'period' => 7]);
 
     Http::assertSent(fn (Request $request): bool => $request->method() === 'POST'
-        && $request->url() === 'https://www.olx.test/api/open/adverts/5/paid-features'
+        && $request->url() === 'https://www.olx.test/api/partner/adverts/5/paid-features'
         && $request['type'] === 'top');
 });
 

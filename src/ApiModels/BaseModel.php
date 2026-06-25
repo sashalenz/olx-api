@@ -51,12 +51,13 @@ abstract class BaseModel
     }
 
     /**
-     * Build an API path under the `api/open/` prefix, e.g. apiPath('adverts')
-     * → `api/open/adverts`.
+     * Build a resource path under the Partner API v2 prefix, e.g.
+     * apiPath('adverts') → `api/partner/adverts`. NB OAuth lives elsewhere
+     * (`api/open/oauth/token`) — only resource endpoints use `api/partner`.
      */
     protected function apiPath(string $suffix): string
     {
-        return 'api/open/'.ltrim($suffix, '/');
+        return 'api/partner/'.ltrim($suffix, '/');
     }
 
     /**

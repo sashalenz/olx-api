@@ -14,7 +14,7 @@ it('fetches the authenticated user', function (): void {
     expect($user->id)->toBe(42)
         ->and($user->isBusiness)->toBeTrue();
 
-    Http::assertSent(fn (Request $request): bool => $request->url() === 'https://www.olx.test/api/open/users/me');
+    Http::assertSent(fn (Request $request): bool => $request->url() === 'https://www.olx.test/api/partner/users/me');
 });
 
 it('reads account balance', function (): void {
@@ -41,7 +41,7 @@ it('reads and updates the business profile', function (): void {
     OlxApi::usersBusiness()->update(['description' => 'Авторозборка']);
 
     Http::assertSent(fn (Request $request): bool => $request->method() === 'PUT'
-        && $request->url() === 'https://www.olx.test/api/open/users-business/me'
+        && $request->url() === 'https://www.olx.test/api/partner/users-business/me'
         && $request['description'] === 'Авторозборка');
 });
 
@@ -51,5 +51,5 @@ it('manages business banners', function (): void {
     expect(OlxApi::usersBusiness()->deleteBanner(7))->toBeTrue();
 
     Http::assertSent(fn (Request $request): bool => $request->method() === 'DELETE'
-        && $request->url() === 'https://www.olx.test/api/open/users-business/me/banners/7');
+        && $request->url() === 'https://www.olx.test/api/partner/users-business/me/banners/7');
 });

@@ -21,7 +21,7 @@ it('lists threads with unread counts', function (): void {
         ->and($threads->data[0]->unreadCount)->toBe(2);
 
     Http::assertSent(fn (Request $request): bool => $request->method() === 'GET'
-        && str_starts_with($request->url(), 'https://www.olx.test/api/open/threads?'));
+        && str_starts_with($request->url(), 'https://www.olx.test/api/partner/threads?'));
 });
 
 it('gets a single thread', function (): void {
@@ -36,7 +36,7 @@ it('marks a thread as read', function (): void {
     expect(OlxApi::threads()->markAsRead(10))->toBeTrue();
 
     Http::assertSent(fn (Request $request): bool => $request->method() === 'POST'
-        && $request->url() === 'https://www.olx.test/api/open/threads/10/commands'
+        && $request->url() === 'https://www.olx.test/api/partner/threads/10/commands'
         && $request['command'] === 'mark-as-read');
 });
 

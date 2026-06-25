@@ -22,7 +22,7 @@ it('lists messages of a thread and flags received', function (): void {
         ->and($messages->data[1]->isReceived())->toBeFalse();
 
     Http::assertSent(fn (Request $request): bool => $request->method() === 'GET'
-        && $request->url() === 'https://www.olx.test/api/open/threads/10/messages');
+        && $request->url() === 'https://www.olx.test/api/partner/threads/10/messages');
 });
 
 it('posts a reply', function (): void {
@@ -33,7 +33,7 @@ it('posts a reply', function (): void {
     expect($message->id)->toBe(3);
 
     Http::assertSent(fn (Request $request): bool => $request->method() === 'POST'
-        && $request->url() === 'https://www.olx.test/api/open/threads/10/messages'
+        && $request->url() === 'https://www.olx.test/api/partner/threads/10/messages'
         && $request['text'] === 'Доброго дня'
         && ! array_key_exists('attachments', $request->data()));
 });
