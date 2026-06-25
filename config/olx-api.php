@@ -4,12 +4,21 @@ declare(strict_types=1);
 
 return [
     /*
-     | Base URL of the OLX site the Partner API v2 lives on. The API itself is
-     | served under `{base_url}/api/open/…` and OAuth token exchange under
-     | `{base_url}/api/open/oauth/token`; the `api/open` prefix is added by the
-     | transport, so do NOT include it here. For OLX Ukraine keep the default.
+     | OAuth host — where the consent + token endpoints live:
+     |   {base_url}/oauth/authorize  and  {base_url}/api/open/oauth/token
+     | (the `/oauth/authorize` + `/api/open/oauth/token` paths are added by the
+     | SDK; do NOT include them here). This is intentionally SEPARATE from the
+     | resource API base below — OAuth and the Partner API are different surfaces.
      */
     'base_url' => env('OLX_API_BASE_URL', 'https://www.olx.ua'),
+
+    /*
+     | Resource API base — the Partner API v2 root that every resource endpoint
+     | (adverts, threads, users, …) hangs off. This is the FULL base including the
+     | `/api/partner` segment, served from the www host. Per partner_api.yaml the
+     | server is `https://www.olx.ua/api/partner`.
+     */
+    'api_url' => env('OLX_API_URL', 'https://www.olx.ua/api/partner'),
 
     /*
      | OAuth2 application credentials (issued at developer.olx.ua). `client_id`

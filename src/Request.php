@@ -32,6 +32,8 @@ final class Request
      * @param  array<string, mixed>  $params  query for GET, JSON/form body otherwise
      * @param  array<string, string>  $headers
      * @param  bool  $asForm  send the body as application/x-www-form-urlencoded (OAuth token endpoint)
+     * @param  ?string  $baseUrl  base to prefix the path with; defaults to the OAuth host
+     *                            (`olx-api.base_url`). Resource calls pass `olx-api.api_url`.
      */
     public function __construct(
         private readonly string $method,
@@ -39,6 +41,7 @@ final class Request
         private readonly array $params,
         private readonly array $headers,
         private readonly bool $asForm = false,
+        private readonly ?string $baseUrl = null,
     ) {}
 
     /**
@@ -50,7 +53,7 @@ final class Request
             // Retry transport (connection) failures only; HTTP error statuses are
             // mapped to exceptions below, so do NOT let retry throw on them.
             ->retry(self::RETRY_TIMES, self::RETRY_SLEEP, fn (Throwable $e): bool => $e instanceof ConnectionException, throw: false)
-            ->baseUrl(rtrim((string) config('olx-api.base_url'), '/'))
+            ->baseUrl(rtrim($this->baseUrl ?? (string) config('olx-api.base_url'), '/'))
             ->withHeaders($this->headers)
             ->acceptJson();
 

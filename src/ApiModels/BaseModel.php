@@ -51,13 +51,13 @@ abstract class BaseModel
     }
 
     /**
-     * Build a resource path under the Partner API v2 prefix, e.g.
-     * apiPath('adverts') → `api/partner/adverts`. NB OAuth lives elsewhere
-     * (`api/open/oauth/token`) — only resource endpoints use `api/partner`.
+     * Normalise a resource path. It is resolved against the Partner API base
+     * (`olx-api.api_url`, e.g. https://www.olx.ua/api/partner) by the transport —
+     * NOT the OAuth host. OAuth endpoints live on `olx-api.base_url`.
      */
     protected function apiPath(string $suffix): string
     {
-        return 'api/partner/'.ltrim($suffix, '/');
+        return ltrim($suffix, '/');
     }
 
     /**
@@ -140,7 +140,7 @@ abstract class BaseModel
      */
     private function dispatch(string $method, string $path, array $params): Collection
     {
-        $response = (new Request($method, $path, $params, $this->headers()))->make();
+        $response = (new Request($method, $path, $params, $this->headers(), false, (string) config('olx-api.api_url')))->make();
 
         /** @var array<string, mixed> $json */
         $json = $response->json() ?? [];
