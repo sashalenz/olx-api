@@ -26,6 +26,15 @@ final class Users extends BaseModel
     }
 
     /**
+     * Fetch a user by id — chiefly a chat **interlocutor** (the buyer you are
+     * messaging): returns their display name + avatar ({@see UserData::$name},
+     * {@see UserData::$avatar}).
+     *
+     * NB: `GET /users/{id}` is NOT in the OLX Partner API OpenAPI spec, but it is
+     * live and returns `{id, name, avatar}`. Don't drop it for "not being in the
+     * docs" — it is the only way to resolve a buyer's name/avatar (a thread
+     * exposes just `interlocutor_id`, no contact details).
+     *
      * @throws OlxApiException
      */
     public function get(int $userId): UserData
