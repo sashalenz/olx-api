@@ -17,6 +17,18 @@ it('fetches the authenticated user', function (): void {
     Http::assertSent(fn (Request $request): bool => $request->url() === 'https://www.olx.test/api/partner/users/me');
 });
 
+it('fetches a chat interlocutor (buyer) with name and avatar', function (): void {
+    Http::fake(['*/users/15691775' => Http::response(['data' => ['id' => 15691775, 'name' => 'Олександр', 'avatar' => 'https://img.olx/avatar.jpg']], 200)]);
+
+    $user = OlxApi::users()->get(15691775);
+
+    expect($user->id)->toBe(15691775)
+        ->and($user->name)->toBe('Олександр')
+        ->and($user->avatar)->toBe('https://img.olx/avatar.jpg');
+
+    Http::assertSent(fn (Request $request): bool => $request->url() === 'https://www.olx.test/api/partner/users/15691775');
+});
+
 it('reads account balance', function (): void {
     Http::fake(['*' => Http::response(['data' => ['balance' => 1200, 'bonus' => 50, 'currency' => 'UAH']], 200)]);
 

@@ -29,6 +29,9 @@ final class MessageData extends OlxData
         #[DataCollectionOf(AttachmentData::class)]
         public array $cvs = [],
         public ?string $createdAt = null,
+        // Optional phone a buyer attaches to a message (Jobs categories; usually
+        // empty for other categories). Present in the API response, undocumented.
+        public ?string $phone = null,
     ) {}
 
     public function typeEnum(): ?MessageType
