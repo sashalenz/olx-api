@@ -26,10 +26,13 @@ it('lists zones for a category', function (): void {
 
 it('lists user packets and buys one', function (): void {
     Http::fake([
-        '*/users/me/packets' => Http::response(['data' => [['id' => 9, 'name' => 'Мега', 'available' => 50]]], 200),
+        '*/users/me/packets' => Http::response(['data' => [['id' => 'a3b1c9d0-6f2e-4b7a-9c1d-2e3f4a5b6c7d', 'name' => 'Мега', 'available' => 50]]], 200),
     ]);
 
-    expect(OlxApi::packets()->userPackets()->data[0]->available)->toBe(50);
+    $userPackets = OlxApi::packets()->userPackets();
+
+    expect($userPackets->data[0]->available)->toBe(50)
+        ->and($userPackets->data[0]->id)->toBe('a3b1c9d0-6f2e-4b7a-9c1d-2e3f4a5b6c7d');
 
     OlxApi::packets()->buyForUser(['category_id' => 1234, 'size' => 200, 'payment_method' => 'account']);
 

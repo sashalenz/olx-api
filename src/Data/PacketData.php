@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace Sashalenz\OlxApi\Data;
 
 /**
- * A purchasable placement packet offered for a category/zone.
+ * A purchasable placement packet offered for a category/zone. OLX serves
+ * packet ids as UUID strings, hence the union type.
  */
 final class PacketData extends OlxData
 {
     public function __construct(
-        public ?int $id = null,
+        public string|int|null $id = null,
         public ?string $type = null,
         public ?int $size = null,
         public ?string $name = null,
