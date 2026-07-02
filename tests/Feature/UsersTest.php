@@ -30,9 +30,13 @@ it('fetches a chat interlocutor (buyer) with name and avatar', function (): void
 });
 
 it('reads account balance', function (): void {
-    Http::fake(['*' => Http::response(['data' => ['balance' => 1200, 'bonus' => 50, 'currency' => 'UAH']], 200)]);
+    Http::fake(['*' => Http::response(['data' => ['sum' => 2380.23, 'wallet' => 2168.57, 'bonus' => 0, 'refund' => 211.66]], 200)]);
 
-    expect(OlxApi::users()->accountBalance()->currency)->toBe('UAH');
+    $balance = OlxApi::users()->accountBalance();
+
+    expect($balance->sum)->toBe(2380.23)
+        ->and($balance->wallet)->toBe(2168.57)
+        ->and($balance->refund)->toBe(211.66);
 });
 
 it('reads payment methods and billing', function (): void {

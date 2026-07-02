@@ -43,7 +43,7 @@ final class Users extends BaseModel
     }
 
     /**
-     * Wallet balance (bonus/refund/currency).
+     * Wallet balance (sum/wallet/bonus/refund, UAH).
      *
      * @throws OlxApiException
      */
