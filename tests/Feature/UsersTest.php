@@ -41,12 +41,33 @@ it('reads account balance', function (): void {
 
 it('reads payment methods and billing', function (): void {
     Http::fake([
-        '*/users/me/payment-methods' => Http::response(['data' => ['methods' => ['account']]], 200),
-        '*/users/me/billing*' => Http::response(['data' => ['items' => []]], 200),
+        '*/users/me/payment-methods' => Http::response(['data' => ['account']], 200),
+        '*/users/me/billing*' => Http::response(['data' => [
+            ['id' => 301896636, 'name' => "Пакет 30 оголошень 'Преміум'", 'date' => '2026-07-02 16:01:14', 'price' => '-2009.00', 'advert_id' => null],
+            ['id' => 301009616, 'name' => 'Преміум оголошення', 'date' => '2026-06-18 12:59:09', 'price' => '-75.00', 'advert_id' => 911647316],
+        ]], 200),
     ]);
 
-    expect(OlxApi::users()->paymentMethods())->toHaveKey('methods')
-        ->and(OlxApi::users()->billing(['page' => 1]))->toHaveKey('items');
+    expect(OlxApi::users()->paymentMethods())->toBe(['account']);
+
+    $billing = OlxApi::users()->billing(['limit' => 2]);
+
+    expect($billing->data)->toHaveCount(2)
+        ->and($billing->data[0]->price)->toBe('-2009.00')
+        ->and($billing->data[0]->advertId)->toBeNull()
+        ->and($billing->data[1]->advertId)->toBe(911647316);
+});
+
+it('lists prepaid and postpaid invoices', function (): void {
+    Http::fake([
+        '*/users/me/prepaid-invoices*' => Http::response(['data' => [['id' => 1]]], 200),
+        '*/users/me/postpaid-invoices*' => Http::response(['data' => []], 200),
+    ]);
+
+    expect(OlxApi::users()->prepaidInvoices())->toBe([['id' => 1]])
+        ->and(OlxApi::users()->postpaidInvoices(['page' => 1]))->toBe([]);
+
+    Http::assertSent(fn (Request $request): bool => str_contains($request->url(), '/api/partner/users/me/prepaid-invoices'));
 });
 
 it('reads and updates the business profile', function (): void {

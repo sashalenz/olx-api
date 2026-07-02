@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Sashalenz\OlxApi\ApiModels;
 
 use Sashalenz\OlxApi\Data\AccountBalanceData;
+use Sashalenz\OlxApi\Data\BillingEntryData;
+use Sashalenz\OlxApi\Data\Paginated;
 use Sashalenz\OlxApi\Data\UserData;
 use Sashalenz\OlxApi\Exceptions\OlxApiException;
 
@@ -65,15 +67,48 @@ final class Users extends BaseModel
     }
 
     /**
-     * Billing history.
+     * Billing history — the wallet charges (packet purchases, paid features,
+     * per-advert fees), newest first.
+     *
+     * @param  array<string, mixed>  $query  optional: ['page'=>1, 'limit'=>…]
+     * @return Paginated<BillingEntryData>
+     *
+     * @throws OlxApiException
+     */
+    public function billing(array $query = []): Paginated
+    {
+        return Paginated::fromResponse(
+            $this->httpGet($this->apiPath('users/me/billing'), $query)->all(),
+            BillingEntryData::class,
+        );
+    }
+
+    /**
+     * Prepaid (top-up) invoices — READ-ONLY list; the Partner API has no
+     * invoice-creation endpoint (top-ups happen in the OLX UI). NB: OLX Ukraine
+     * answers 403 "Feature is disabled for this country" here.
      *
      * @param  array<string, mixed>  $query  optional: ['page'=>1, 'limit'=>…]
      * @return array<string, mixed>
      *
      * @throws OlxApiException
      */
-    public function billing(array $query = []): array
+    public function prepaidInvoices(array $query = []): array
     {
-        return $this->dataOf($this->httpGet($this->apiPath('users/me/billing'), $query));
+        return $this->dataOf($this->httpGet($this->apiPath('users/me/prepaid-invoices'), $query));
+    }
+
+    /**
+     * Postpaid (monthly business billing) invoices — READ-ONLY list, empty
+     * unless the account is on postpaid terms with OLX.
+     *
+     * @param  array<string, mixed>  $query  optional: ['page'=>1, 'limit'=>…]
+     * @return array<string, mixed>
+     *
+     * @throws OlxApiException
+     */
+    public function postpaidInvoices(array $query = []): array
+    {
+        return $this->dataOf($this->httpGet($this->apiPath('users/me/postpaid-invoices'), $query));
     }
 }
